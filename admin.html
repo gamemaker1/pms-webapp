@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Smart Parking System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    #toggleContainer {
+      margin-bottom: 20px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Admin Page</h1>
+  <div id="toggleContainer">
+    <label>
+      <input type="checkbox" id="availableToggle">
+      Show only available slots
+    </label>
+  </div>
+  <div id="tableContainer"></div>
+
+  <script>
+    // API endpoint for slots
+    const API_SLOTS_URL = 'http://192.168.12.1:4242/api/slots';
+
+    // Retrieve token from localStorage
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Unauthorized');
+      throw new Error('Unauthorized');
+    }
+
+    /**
+     * Fetch slots data based on availability and update table.
+     * @param {boolean} available - Whether to show only available slots.
+     */
+    function refreshSlots(available) {
+      const url = available ? `${API_SLOTS_URL}?available=true` : API_SLOTS_URL;
+      fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'session ' + token
+        }
+      })
+      .then(async response => {
+        if (response.status === 401) {
+          alert('Unauthorized: Token expired or invalid.');
+          throw new Error('Unauthorized');
+        }
+        let data = await response.json();
+        if (data.error) {
+          alert(data.error.message);
+          return;
+        }
+        renderTable(data.data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
+
+    /**
+     * Render the slots data in a table.
+     * @param {Array} slots - Array of slot objects.
+     */
+    function renderTable(slots) {
+      const container = document.getElementById('tableContainer');
+      let html = '<table>';
+      html += '<thead><tr><th>Location</th><th>Type</th><th>Occupied By</th></tr></thead>';
+      html += '<tbody>';
+      if (slots.length === 0) {
+        html += '<tr><td colspan="3">No slots found.</td></tr>';
+      } else {
+        slots.forEach(slot => {
+          html += `<tr>
+            <td>${slot.location}</td>
+            <td>${slot.type}</td>
+            <td>${slot.occupied_by ? slot.occupied_by : 'Available'}</td>
+          </tr>`;
+        });
+      }
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    // Setup the toggle event listener to refetch data when changed
+    document.getElementById('availableToggle').addEventListener('change', function(event) {
+      refreshSlots(event.target.checked);
+    });
+
+    // On page load, fetch data with the current toggle state (default unchecked)
+    window.onload = function() {
+      const toggle = document.getElementById('availableToggle');
+      refreshSlots(toggle.checked);
+    }
+  </script>
+</body>
+</html>
+
