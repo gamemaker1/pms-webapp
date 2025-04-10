@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Parking Exit</title>
+  <style>
+    body {
+      background-color: #18181b;
+      color: #f4f4f5;
+      font-family: sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+    .card {
+      background: #27272a;
+      padding: 2rem;
+      border-radius: 1rem;
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid #3f3f46;
+      text-align: center;
+    }
+    input, button {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.75rem;
+      margin-top: 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+    }
+    input {
+      background: #18181b;
+      color: #f4f4f5;
+      border: 1px solid #3f3f46;
+    }
+    button {
+      background-color: #d4d4d8;
+      color: #18181b;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background-color: #a1a1aa;
+    }
+    .hidden { display: none; }
+    .buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .buttons button {
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="formCard">
+    <h2>Exit Parking</h2>
+    <input type="text" id="slot" placeholder="Enter Slot Name">
+    <input type="text" id="code" placeholder="Enter Entry Code">
+    <button onclick="simulateExit()">Verify</button>
+  </div>
+
+  <div class="card hidden" id="summaryCard">
+    <h2>Payment Summary</h2>
+    <div id="summaryText" style="margin-top: 1rem; text-align: left;"></div>
+    <div class="buttons">
+      <button onclick="confirmPaid(true)">✅ Paid</button>
+      <button onclick="confirmPaid(false)">❌ Not Paid</button>
+    </div>
+  </div>
+
+  <div class="card hidden" id="finalCard">
+    <h2 id="finalStatus">Thank you!</h2>
+    <p id="finalMessage"></p>
+  </div>
+
+  <script>
+    function simulateExit() {
+      const now = new Date();
+      const randomPastMinutes = Math.floor(Math.random() * 180) + 1;
+      const entryTime = new Date(now - randomPastMinutes * 60 * 1000);
+      const duration = Math.ceil((now - entryTime) / 60000);
+      const amount = Math.ceil(duration * (100 / 60));
+
+      // Store for display later
+      window.exitData = {
+        entry: entryTime,
+        exit: now,
+        duration,
+        amount
+      };
+
+      document.getElementById('formCard').classList.add('hidden');
+      document.getElementById('summaryCard').classList.remove('hidden');
+
+      document.getElementById('summaryText').innerHTML = `
+        <p><strong>Entry Time:</strong> ${entryTime.toLocaleTimeString()}</p>
+        <p><strong>Exit Time:</strong> ${now.toLocaleTimeString()}</p>
+        <p><strong>Duration:</strong> ${duration} minutes</p>
+        <p><strong>Amount Due:</strong> ₹${amount}</p>
+      `;
+    }
+
+    function confirmPaid(paid) {
+      const { amount, exit } = window.exitData;
+      document.getElementById('summaryCard').classList.add('hidden');
+      document.getElementById('finalCard').classList.remove('hidden');
+
+      if (paid) {
+        document.getElementById('finalStatus').textContent = 'Exit Successful';
+        document.getElementById('finalMessage').innerHTML = `
+          Payment of ₹${amount} received.<br> Exit time: ${exit.toLocaleTimeString()}
+        `;
+      } else {
+        document.getElementById('finalStatus').textContent = 'Payment Incomplete';
+        document.getElementById('finalMessage').innerHTML = `
+          Please return and complete payment to exit.
+        `;
+      }
+    }
+  </script>
+</body>
+</html>
