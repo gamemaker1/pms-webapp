@@ -1,57 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Admin - Smart Parking System</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
+      margin: 0;
+      padding: 2rem;
+      background-color: #18181b;
+      color: #f4f4f5;
+      font-family: system-ui, sans-serif;
+      min-height: 100vh;
     }
+
+    h1 {
+      margin-bottom: 2rem;
+      margin-top: 0;
+      font-size: 1.75rem;
+      color: #fafafa;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #27272a;
+      border: 1px solid #3f3f46;
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+
     #toggleContainer {
-      margin-bottom: 20px;
+      margin-bottom: 1.5rem;
     }
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+      color: #d4d4d8;
+    }
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #d4d4d8;
+    }
+
     table {
-      border-collapse: collapse;
       width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
     }
-    table, th, td {
-      border: 1px solid #ddd;
-    }
+
     th, td {
-      padding: 8px;
+      padding: 0.75rem;
       text-align: left;
+      border-bottom: 1px solid #3f3f46;
     }
+
     th {
-      background: #f0f0f0;
+      background-color: #3f3f46;
+      color: #f4f4f5;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    td {
+      color: #e4e4e7;
+      font-size: 0.95rem;
+    }
+
+    tr:hover {
+      background-color: #3f3f46;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 1rem;
+      color: #a1a1aa;
     }
   </style>
 </head>
 <body>
-  <h1>Admin Page</h1>
-  <div id="toggleContainer">
-    <label>
-      <input type="checkbox" id="availableToggle">
-      Show only available slots
-    </label>
+  <div class="container">
+    <h1>Admin Dashboard</h1>
+    <div id="toggleContainer">
+      <label>
+        <input type="checkbox" id="availableToggle" />
+        Show only available slots
+      </label>
+    </div>
+    <div id="tableContainer"></div>
   </div>
-  <div id="tableContainer"></div>
 
   <script>
-    // API endpoint for slots
     const API_SLOTS_URL = 'http://192.168.12.1:4242/api/slots';
-
-    // Retrieve token from localStorage
     const token = localStorage.getItem('token');
+
     if (!token) {
       alert('Unauthorized');
       throw new Error('Unauthorized');
     }
 
-    /**
-     * Fetch slots data based on availability and update table.
-     * @param {boolean} available - Whether to show only available slots.
-     */
     function refreshSlots(available) {
       const url = available ? `${API_SLOTS_URL}?available=true` : API_SLOTS_URL;
       fetch(url, {
@@ -78,41 +133,45 @@
       });
     }
 
-    /**
-     * Render the slots data in a table.
-     * @param {Array} slots - Array of slot objects.
-     */
     function renderTable(slots) {
       const container = document.getElementById('tableContainer');
-      let html = '<table>';
-      html += '<thead><tr><th>Location</th><th>Type</th><th>Occupied By</th></tr></thead>';
-      html += '<tbody>';
       if (slots.length === 0) {
-        html += '<tr><td colspan="3">No slots found.</td></tr>';
-      } else {
-        slots.forEach(slot => {
-          html += `<tr>
+        container.innerHTML = `<div class="empty">No slots found.</div>`;
+        return;
+      }
+
+      let html = `
+        <table>
+          <thead>
+            <tr>
+              <th>Location</th>
+              <th>Type</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+      slots.forEach(slot => {
+        const status = slot.occupied_by ? 'Occupied' : 'Available';
+        html += `
+          <tr>
             <td>${slot.location}</td>
             <td>${slot.type}</td>
-            <td>${slot.occupied_by ? slot.occupied_by : 'Available'}</td>
-          </tr>`;
-        });
-      }
+            <td>${status}</td>
+          </tr>
+        `;
+      });
       html += '</tbody></table>';
       container.innerHTML = html;
     }
 
-    // Setup the toggle event listener to refetch data when changed
-    document.getElementById('availableToggle').addEventListener('change', function(event) {
+    document.getElementById('availableToggle').addEventListener('change', function (event) {
       refreshSlots(event.target.checked);
     });
 
-    // On page load, fetch data with the current toggle state (default unchecked)
-    window.onload = function() {
-      const toggle = document.getElementById('availableToggle');
-      refreshSlots(toggle.checked);
-    }
+    window.onload = function () {
+      refreshSlots(document.getElementById('availableToggle').checked);
+    };
   </script>
 </body>
 </html>
-
