@@ -9,11 +9,10 @@ export function hideForm() {
 }
 
 export function displayResult(data) {
-  const s = data.session;
-  const t = data.slot;
+  const s = data.session ?? data
   const lines = [
     '<h2>Parking Session Details</h2>',
-    `<p><strong>Slot:</strong> ${t?.location ?? '-'}</p>`,
+    `<p><strong>Slot:</strong> ${data.slot?.location ?? s.slot ?? '-'}</p>`,
     `<p><strong>Vehicle:</strong> ${s.vehicle}</p>`,
     `<p><strong>Entry:</strong> ${new Date(s.entry_at).toLocaleString()}</p>`,
     `<p><strong>Parked:</strong> ${s.parked_at ? new Date(s.parked_at).toLocaleString() : '-'}</p>`,
@@ -143,7 +142,7 @@ export function renderSessions(sessions) {
     const duration = getDuration(sess.parked_at, sess.left_at);
 
     tr.innerHTML = `
-      <td>${sess.symbol}</td>
+      <td>${sess.slot ?? '-'}</td>
       <td>${sess.vehicle}</td>
       <td>${getStatus(sess)}</td>
       <td>${formatDate(sess.entry_at)}</td>

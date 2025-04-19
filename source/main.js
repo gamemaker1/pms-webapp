@@ -23,8 +23,8 @@ async function init() {
     try {
       const data = await fetchSession(null, token);
       hideForm(); displayResult(data);
-    } catch {
-      localStorage.removeItem('token'); showForm();
+    } catch (error) {
+      console.error(error); showForm();
     }
   } else showForm();
 }

@@ -14,7 +14,8 @@ async function init() {
   if (!token) return location.replace('index.html');
   try {
     const data = await fetchSession(null, token);
-    sessionData  = data.session;
+    console.log(data)
+    sessionData  = data;
     sessionToken = token;
 
     const parked = Date.parse(sessionData.parked_at);
@@ -30,7 +31,7 @@ async function init() {
     const total = sessionData.amount_paid / 100;
     totalEl.textContent  = `Total: ${total.toFixed(2)}`;
 
-    if (isNaN(total)) location.replace('index.html');
+    if (isNaN(total) || isNaN(hrs)) location.replace('index.html');
   } catch (error) {
     console.error(error)
   }
