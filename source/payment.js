@@ -14,22 +14,21 @@ async function init() {
   if (!token) return location.replace('index.html');
   try {
     const data = await fetchSession(null, token);
-    console.log(data)
     sessionData  = data;
     sessionToken = token;
 
     const parked = Date.parse(sessionData.parked_at);
-    const left   = Date.parse(sessionData.left_at);
-    const hrs    = (left - parked) / 36e5;
-    timeEl.textContent  = `Time Stayed: ${hrs.toFixed(2)} hour(s)`;
+    const left = Date.parse(sessionData.left_at);
+    const hrs = (left - parked) / 36e5;
+    timeEl.textContent = `Time Stayed: ${hrs.toFixed(2)} hour(s)`;
 
     const rates = await fetchRates();
     const rateObj = rates.find(r => r.type === sessionData.vehicle);
     const rateVal = rateObj?.rate ?? 0;
-    rateEl.textContent   = `Rate: ${rateVal / 100} rs/hour`;
+    rateEl.textContent = `Rate: ${rateVal / 100} rs/hour`;
 
     const total = sessionData.amount_paid / 100;
-    totalEl.textContent  = `Total: ${total.toFixed(2)}`;
+    totalEl.textContent = `Total: ${total.toFixed(2)}`;
 
     if (isNaN(total) || isNaN(hrs)) location.replace('index.html');
   } catch (error) {
