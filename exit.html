@@ -14,6 +14,7 @@
       min-height: 100vh;
       padding: 1rem;
     }
+
     .card {
       background: #27272a;
       padding: 2rem;
@@ -23,6 +24,7 @@
       border: 1px solid #3f3f46;
       text-align: center;
     }
+
     input, button {
       width: 100%;
       box-sizing: border-box;
@@ -46,6 +48,7 @@
     button:hover {
       background-color: #a1a1aa;
     }
+
     .hidden { display: none; }
     .buttons {
       display: flex;
@@ -59,13 +62,13 @@
 </head>
 <body>
   <div class="card" id="formCard">
-    <h2>Exit Parking</h2>
-    <input type="text" id="slot" placeholder="Enter Slot Name">
+    <h2>Exit Parking Slot</h2>
+    <input type="text" id="slot" placeholder="Enter Slot">
     <input type="text" id="code" placeholder="Enter Entry Code">
     <button onclick="simulateExit()">Verify</button>
   </div>
 
-  <div class="card hidden" id="summaryCard">
+  <div class="card" id="summaryCard">
     <h2>Payment Summary</h2>
     <div id="summaryText" style="margin-top: 1rem; text-align: left;"></div>
     <div class="buttons">

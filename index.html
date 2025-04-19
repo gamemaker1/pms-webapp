@@ -12,7 +12,9 @@
       --primary: #d4d4d8;
       --primary-hover: #a1a1aa;
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       background: var(--bg);
       color: var(--text);
@@ -23,22 +25,24 @@
       min-height: 100vh;
       padding: 1rem;
     }
+
     #app {
       width: 100%;
       max-width: 400px;
     }
-    #otpForm {
+
+    #form {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 0.5rem;
       padding: 1.5rem;
       text-align: center;
     }
-    #otpForm h2 {
+    #form h2 {
       margin-bottom: 1rem;
       font-size: 1.5rem;
     }
-    #otpForm input {
+    #form input {
       width: 100%;
       padding: 0.75rem;
       margin-bottom: 1rem;
@@ -47,7 +51,7 @@
       background: var(--bg);
       color: var(--text);
     }
-    #otpForm button {
+    #form button {
       width: 100%;
       padding: 0.75rem;
       border: none;
@@ -57,9 +61,10 @@
       cursor: pointer;
       transition: background 0.2s;
     }
-    #otpForm button:hover {
+    #form button:hover {
       background: var(--primary-hover);
     }
+
     #result {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -69,95 +74,93 @@
       margin-top: 1rem;
       display: none;
     }
+
     p {
-      margin: 0.5rem 0;
+      margin: 0;
+      padding: 0;
     }
   </style>
 </head>
 <body>
   <div id="app">
-    <div id="otpForm">
-      <h2>Enter OTP</h2>
-      <form id="form">
+    <div id="form">
+      <h2>Smart Parking System</h2>
+      <form>
         <input type="text" id="otp" placeholder="Enter OTP" required>
-        <button type="submit">Submit</button>
+        <button type="submit">Get Parking Slot</button>
       </form>
     </div>
     <div id="result"></div>
   </div>
 
   <script>
-    const REQUEST_URL = 'http://192.168.12.1:4242/api/sessions/me';
-    const SESSION_URL = 'http://192.168.12.1:4242/api/sessions/me';
+    const SESSION_URL = 'http://192.168.12.1:4242/api/sessions/me'
 
-    function showForm() {
-      document.getElementById('otpForm').style.display = 'block';
-      document.getElementById('result').style.display = 'none';
+    const showForm = () => {
+      document.getElementById('form').style.display = 'block'
+      document.getElementById('result').style.display = 'none'
     }
 
-    function hideForm() {
-      document.getElementById('otpForm').style.display = 'none';
-      document.getElementById('result').style.display = 'block';
+    const hideForm = () => {
+      document.getElementById('form').style.display = 'none'
+      document.getElementById('result').style.display = 'block'
     }
 
-    function displayResult(data) {
-      console.log(data)
-      const s = data.data.session;
-      const t = data.data.slot;
+    const displayResult = (data) => {
+      const s = data.data.session; const t = data.data.slot
       let html = `<h2>Parking Session Details</h2>
-<span><strong>Symbol:</strong> ${s.symbol}</span>
-<span><strong>Vehicle:</strong> ${s.vehicle}</span>
-<span><strong>Location:</strong> ${t?.location ?? '-'}</span>
-<span><strong>Type:</strong> ${t?.type ?? '-'}</span>
-<span><strong>Entry:</strong> ${new Date(s.entry_at).toLocaleString()}</span>
-<span><strong>Parked:</strong> ${s.parked_at && new Date(s.parked_at).toLocaleString() || '-'}</span>
-<span><strong>Left:</strong> ${s.left_at && new Date(s.left_at).toLocaleString() || '-'}</span>
-<span><strong>Amount:</strong> ${s.amount_paid ?? '-'}</span>`
-      document.getElementById('result').innerHTML = html;
+<span><strong><em>Slot:</em></strong> ${t?.location ?? '-'}</span>
+<span><strong><em>Vehicle:</em></strong> ${s.vehicle}</span>
+<span><strong><em>Entry:</em></strong> ${new Date(s.entry_at).toLocaleString()}</span>
+<span><strong><em>Parked:</em></strong> ${s.parked_at && new Date(s.parked_at).toLocaleString() || '-'}</span>
+<span><strong><em>Left:</em></strong> ${s.left_at && new Date(s.left_at).toLocaleString() || '-'}</span>
+<span><strong><em>Amount:</em></strong> ${s.amount_paid ?? '-'}</span>`
+      document.getElementById('result').innerHTML = html
     }
 
-    function callAPI(otp = null, token = null) {
-      const endpoint = (token && !otp) ? SESSION_URL : REQUEST_URL;
-      const method = (token && !otp) ? 'GET' : 'POST';
-      let headers = { 'Content-Type': 'application/json' };
-      if (token) headers['Authorization'] = 'session ' + token;
-      const payload = otp ? { symbol: otp } : undefined;
-      fetch(endpoint, {
-        method,
-        headers,
-        body: payload && JSON.stringify(payload)
-      })
-      .then(async response => {
+    const fetchSession = async (otp = null, token = null) => {
+      const endpoint = SESSION_URL
+      const method = (token && !otp) ? 'GET' : 'POST'
+      let headers = { 'Content-Type': 'application/json' }
+      if (token) headers['Authorization'] = 'session ' + token
+      const payload = otp ? { symbol: otp } : undefined
+
+      try {
+        const response = await fetch(endpoint, {
+          method, headers,
+          body: payload && JSON.stringify(payload)
+        })
+
         if (response.status === 401) {
-          localStorage.removeItem('token');
-          showForm();
-          throw new Error('Please enter your OTP.');
+          localStorage.removeItem('token'); showForm()
+          throw new Error('Please enter your OTP.')
         }
-        let data = await response.json();
-        if (data.error) { alert(data.error.message); return; }
+
+        const data = await response.json()
+        if (data.error) throw new Error(data.error.message)
         if ((!otp && token) || (data.data && data.data.token)) {
-          if(data.data.token) localStorage.setItem('token', data.data.token);
+          if(data.data.token) localStorage.setItem('token', data.data.token)
         }
-        return data;
-      })
-      .then(data => {
-        if (!data) return;
-        hideForm();
-        displayResult(data);
-      })
-      .catch(error => { console.error('Error:', error); alert(error.message); });
+
+        if (!data) return
+        hideForm(); displayResult(data)
+      } catch (error) {
+        console.error(error)
+        alert(error.message)
+      }      
     }
 
-    document.getElementById('form').addEventListener('submit', function(e) {
+    document.getElementById('form').addEventListener('submit', (e) => {
       e.preventDefault();
       let otp = document.getElementById('otp').value.trim();
-      if (!otp) { alert('Please enter an OTP'); return; }
-      callAPI(otp, null);
-    });
+      if (!otp) return alert('Please enter an OTP.')
 
-    window.onload = function() {
-      const token = localStorage.getItem('token');
-      token ? callAPI(null, token) : showForm();
+      fetchSession(otp, null);
+    })
+
+    window.onload = () => {
+      const token = localStorage.getItem('token')
+      token ? fetchSession(null, token) : showForm()
     }
   </script>
 </body>
