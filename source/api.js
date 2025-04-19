@@ -1,8 +1,8 @@
-const SESSION_URL  = 'http://192.168.12.1:4242/api/sessions/me';
-const SESSIONS_URL = 'http://192.168.12.1:4242/api/sessions';
-const RATES_URL    = 'http://192.168.12.1:4242/api/rates';
-const SLOTS_URL    = 'http://192.168.12.1:4242/api/slots';
-const ANALYSIS_URL = 'http://192.168.12.1:4242/api/analysis';
+const SESSION_URL  = 'http://localhost:4242/api/sessions/me';
+const SESSIONS_URL = 'http://localhost:4242/api/sessions';
+const RATES_URL    = 'http://localhost:4242/api/rates';
+const SLOTS_URL    = 'http://localhost:4242/api/slots';
+const ANALYSIS_URL = 'http://localhost:4242/api/analysis';
 
 export async function fetchSession(otp = null, token = null) {
   const method = token && !otp ? 'GET' : 'POST';

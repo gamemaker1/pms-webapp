@@ -18,7 +18,7 @@ export function displayResult(data) {
     `<p><strong>Entry:</strong> ${new Date(s.entry_at).toLocaleString()}</p>`,
     `<p><strong>Parked:</strong> ${s.parked_at ? new Date(s.parked_at).toLocaleString() : '-'}</p>`,
     `<p><strong>Left:</strong> ${s.left_at ? new Date(s.left_at).toLocaleString() : '-'}</p>`,
-    `<p><strong>Amount:</strong> ${s.amount_paid ?? '-'}</p>`
+    `<p><strong>Amount:</strong> ${formatAmount(s.amount_paid)}</p>`
   ];
   document.getElementById('result').innerHTML = lines.join('\n');
 }
@@ -96,6 +96,11 @@ function getDuration(start, end) {
   return `${hrs}h ${mins}m`;
 }
 
+function formatAmount(amount) {
+  if (typeof amount !== 'number') return '-';
+  return (amount / 100).toFixed(2) + ' rs';
+}
+
 export function renderSessions(sessions) {
   const tbody = document.querySelector('#sessions-table tbody');
   tbody.innerHTML = '';
@@ -109,7 +114,7 @@ export function renderSessions(sessions) {
       <td>${sess.vehicle}</td>
       <td>${formatDate(sess.entry_at)}</td>
       <td>${duration}</td>
-      <td>${sess.amount_paid ?? '-'}</td>
+      <td>${formatAmount(sess.amount_paid)}</td>
       <td>${sess.transaction_id ?? '-'}</td>
     `;
     tbody.appendChild(tr);
