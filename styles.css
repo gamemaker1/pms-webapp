@@ -1,0 +1,279 @@
+/* style.css */
+
+:root {
+  --bg: #ffffff;
+  --text: #000000;
+  --border: rgba(0, 0, 0, 0.1);
+  --shadow: rgba(0, 0, 0, 0.05);
+  --radius: 0.5rem;
+  --spacing: 1rem;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: var(--spacing);
+}
+
+#app,
+#payment,
+#admin-login,
+#dashboard {
+  width: 100%;
+  max-width: 400px;
+}
+
+#app {
+  margin-top: var(--spacing);
+}
+
+#form,
+#result,
+#payment,
+#admin-login,
+#dashboard {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 2px 4px var(--shadow);
+  padding: calc(var(--spacing) * 1.5);
+  margin-bottom: var(--spacing);
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing);
+  text-align: center;
+}
+
+h3 {
+  font-size: 1.25rem;
+  margin-bottom: var(--spacing);
+}
+
+form input[type="text"],
+form input[type="password"],
+#payment p {
+  width: 100%;
+}
+
+input,
+button {
+  font-size: 1rem;
+}
+
+input {
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text);
+  margin-bottom: var(--spacing);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus {
+  border-color: var(--text);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--shadow);
+}
+
+button {
+  padding: 0.75rem;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--text);
+  color: var(--bg);
+  cursor: pointer;
+  font-weight: 500;
+  width: 100%;
+  transition: filter 0.2s;
+}
+
+button:hover {
+  filter: brightness(90%);
+}
+
+#result span,
+#result p {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+#payment {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 2px 4px var(--shadow);
+  padding: calc(var(--spacing) * 1.5);
+  max-width: 400px;
+  margin: var(--spacing) auto;
+  text-align: center;
+}
+
+#payment p {
+  margin-bottom: var(--spacing);
+  font-size: 1rem;
+}
+
+#payment button {
+  display: inline-block;
+  width: auto;
+  padding: 0.75rem 1.5rem;
+  margin: 0 var(--spacing) var(--spacing);
+  border: none;
+  border-radius: var(--radius);
+  background: var(--text);
+  color: var(--bg);
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+
+#payment button:hover {
+  filter: brightness(90%);
+}
+
+#dashboard {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+#slot-filters button {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  margin: 0 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  width: auto;
+}
+
+#slot-filters button.active {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 2rem;
+}
+
+.table-wrapper table {
+  min-width: 1000px;
+  width: 100%;
+  margin: 2rem;
+  border-collapse: collapse;
+}
+
+.table-wrapper th,
+.table-wrapper td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  font-size: 0.875rem;
+}
+
+#slots-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#slots-table th,
+#slots-table td {
+  padding: 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+#sessions-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 2rem;
+}
+
+#sessions-table th,
+#sessions-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  font-size: 0.875rem;
+}
+
+#analysis > div {
+  margin-bottom: var(--spacing);
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul li {
+  margin-bottom: 0.25rem;
+}
+
+.spinner-container {
+  position: relative;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.spinner-count {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.55rem;
+  font-weight: 600;
+  color: var(--primary);
+  pointer-events: none;
+}
+
+.spinner {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.track {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 3;
+}
+
+.fill {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.2s linear;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}

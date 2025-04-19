@@ -1,0 +1,139 @@
+export function showForm() {
+  document.getElementById('form').style.display = 'block';
+  document.getElementById('result').style.display = 'none';
+}
+
+export function hideForm() {
+  document.getElementById('form').style.display = 'none';
+  document.getElementById('result').style.display = 'block';
+}
+
+export function displayResult(data) {
+  const s = data.session;
+  const t = data.slot;
+  const lines = [
+    '<h2>Parking Session Details</h2>',
+    `<p><strong>Slot:</strong> ${t?.location ?? '-'}</p>`,
+    `<p><strong>Vehicle:</strong> ${s.vehicle}</p>`,
+    `<p><strong>Entry:</strong> ${new Date(s.entry_at).toLocaleString()}</p>`,
+    `<p><strong>Parked:</strong> ${s.parked_at ? new Date(s.parked_at).toLocaleString() : '-'}</p>`,
+    `<p><strong>Left:</strong> ${s.left_at ? new Date(s.left_at).toLocaleString() : '-'}</p>`,
+    `<p><strong>Amount:</strong> ${s.amount_paid ?? '-'}</p>`
+  ];
+  document.getElementById('result').innerHTML = lines.join('\n');
+}
+
+export function bindOtpForm(onSubmit) {
+  const form = document.getElementById('otp-form');
+  const input = document.getElementById('otp-input');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const otp = input.value.trim();
+    if (!otp) return alert('Please enter an OTP.');
+    onSubmit(otp);
+  });
+}
+
+export function showLogin() {
+  document.getElementById('admin-login').style.display = 'block';
+  document.getElementById('dashboard').style.display   = 'none';
+}
+
+export function showDashboard() {
+  document.getElementById('admin-login').style.display = 'none';
+  document.getElementById('dashboard').style.display   = 'block';
+}
+
+export function bindAdminForm(onSubmit) {
+  const form   = document.getElementById('admin-form');
+  const secret = document.getElementById('admin-secret');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const s = secret.value.trim();
+    if (!s) return alert('Enter your admin secret');
+    onSubmit(s);
+  });
+}
+
+function setActiveFilter(button) {
+  document
+    .querySelectorAll('#slot-filters button')
+    .forEach(btn => btn.classList.remove('active'));
+  button.classList.add('active');
+}
+
+export function bindSlotFilters(onFilter) {
+  document.getElementById('slot-filters')
+    .addEventListener('click', e => {
+      if (e.target.tagName === 'BUTTON') {
+        setActiveFilter(e.target);
+        onFilter(e.target.dataset.available);
+      }
+    });
+}
+
+export function renderSlots(slots) {
+  const tbody = document.querySelector('#slots-table tbody');
+  tbody.innerHTML = slots.map(s => `
+    <tr>
+      <td>${s.location}</td>
+      <td>${s.type}</td>
+      <td>${s.occupied_by ?? '-'}</td>
+    </tr>
+  `).join('');
+}
+
+function formatDate(d) {
+  return d ? new Date(d).toLocaleString() : '-';
+}
+
+function getDuration(start, end) {
+  if (!start || !end) return '-';
+  const ms = new Date(end) - new Date(start);
+  const minutes = Math.floor(ms / 60000);
+  const hrs = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  return `${hrs}h ${mins}m`;
+}
+
+export function renderSessions(sessions) {
+  const tbody = document.querySelector('#sessions-table tbody');
+  tbody.innerHTML = '';
+
+  sessions.forEach(sess => {
+    const tr = document.createElement('tr');
+    const duration = getDuration(sess.parked_at, sess.left_at);
+
+    tr.innerHTML = `
+      <td>${sess.symbol}</td>
+      <td>${sess.vehicle}</td>
+      <td>${formatDate(sess.entry_at)}</td>
+      <td>${duration}</td>
+      <td>${sess.amount_paid ?? '-'}</td>
+      <td>${sess.transaction_id ?? '-'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+export function renderAnalysis(data) {
+  document.getElementById('busiest-slowest').innerHTML = `
+    <h4>Busiest / Slowest Times</h4>
+    <p>Busiest: ${data.busiest.join(', ')}</p>
+    <p>Slowest: ${data.slowest.join(', ')}</p>
+  `;
+  document.getElementById('mean-duration').innerHTML = `
+    <h4>Parking Duration</h4>
+    <p>Mean: ${data.mean_duration}</p>
+    <p>Median: ${data.median_duration}</p>
+  `;
+  document.getElementById('type-duration').innerHTML = `
+    <h4>By Vehicle Type</h4>
+    <ul>${Object.entries(data.duration_by_type)
+      .map(([t,d]) => `<li>${t}: ${d}</li>`).join('')}</ul>
+  `;
+  document.getElementById('revenue').innerHTML = `
+    <h4>Revenue by Type</h4>
+    <ul>${Object.entries(data.revenue_by_type)
+      .map(([t,r]) => `<li>${t}: ${r}</li>`).join('')}</ul>
+  `;
+}
