@@ -78,7 +78,7 @@ export function renderSlots(slots) {
     <tr>
       <td>${s.location}</td>
       <td>${s.type}</td>
-      <td>${s.occupied_by ?? '-'}</td>
+      <td>${s.occupied_by && 'yes' || 'no'}</td>
     </tr>
   `).join('');
 }
@@ -101,6 +101,39 @@ function formatAmount(amount) {
   return (amount / 100).toFixed(2) + ' rs';
 }
 
+function getStatus(sess) {
+  const { entry_at, auth_at, parked_at, paid_at, left_at } = sess;
+  const now = Date.now();
+  const FIVE_MIN = 5 * 60 * 1000;
+
+  const ts = s => !!s ? Date.parse(s) : null;
+  const entry  = ts(entry_at);
+  const auth   = ts(auth_at);
+  const park   = ts(parked_at);
+  const paid   = ts(paid_at);
+
+  if (entry && !auth) {
+    if (now - entry > FIVE_MIN) return '<strong>lost</strong>';
+    return 'entered';
+  }
+  if (entry && auth && !park) {
+    if (now - auth > FIVE_MIN) return '<strong>lost</strong>';
+    return 'searching';
+  }
+  if (entry && auth && park && !paid) {
+    return 'parked';
+  }
+  if (entry && auth && park && paid && !left_at) {
+    if (now - paid > FIVE_MIN) return '<strong>lost</strong>';
+    return 'exiting';
+  }
+  if (entry && auth && park && paid && left_at) {
+    return 'completed';
+  }
+
+  return 'invalid';
+}
+
 export function renderSessions(sessions) {
   const tbody = document.querySelector('#sessions-table tbody');
   tbody.innerHTML = '';
@@ -112,6 +145,7 @@ export function renderSessions(sessions) {
     tr.innerHTML = `
       <td>${sess.symbol}</td>
       <td>${sess.vehicle}</td>
+      <td>${getStatus(sess)}</td>
       <td>${formatDate(sess.entry_at)}</td>
       <td>${duration}</td>
       <td>${formatAmount(sess.amount_paid)}</td>
