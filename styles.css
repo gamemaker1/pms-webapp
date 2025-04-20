@@ -303,3 +303,36 @@ ul li {
   width: 100% !important;
   height: 300px !important;
 }
+
+@media (max-width: 480px) {
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing);
+  }
+
+  #app,
+  #payment,
+  #admin-login,
+  #form,
+  #result {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --text: #f0f0f0;
+    --border: rgba(255, 255, 255, 0.2);
+    --shadow: rgba(0, 0, 0, 0.4);
+  }
+}
