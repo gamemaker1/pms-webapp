@@ -172,7 +172,8 @@ function renderBarChart(canvasId, labels, data, seriesLabel) {
         datasets: [{
           label: seriesLabel,
           data,
-          backgroundColor: 'rgba(0,0,0,0.8)'
+          backgroundColor: window.matchMedia?.('(prefers-color-scheme: dark)').matches
+              ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.8)',
         }]
       },
       options: {
