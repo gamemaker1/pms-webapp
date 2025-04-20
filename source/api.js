@@ -1,8 +1,10 @@
-const SESSION_URL  = 'http://192.168.12.1:4242/api/sessions/me';
-const SESSIONS_URL = 'http://192.168.12.1:4242/api/sessions';
-const RATES_URL    = 'http://192.168.12.1:4242/api/rates';
-const SLOTS_URL    = 'http://192.168.12.1:4242/api/slots';
-const ANALYSIS_URL = 'http://192.168.12.1:4242/api/analysis';
+const SERVER_URL   = 'http://192.168.12.1:4242/api';
+
+const SESSION_URL  = `${SERVER_URL}/sessions/me`;
+const SESSIONS_URL = `${SERVER_URL}/sessions`;
+const RATES_URL    = `${SERVER_URL}/rates`;
+const SLOTS_URL    = `${SERVER_URL}/slots`;
+const ANALYSIS_URL = `${SERVER_URL}/analysis`;
 
 export async function fetchSession(otp = null, token = null) {
   const method = token && !otp ? 'GET' : 'POST';
