@@ -153,25 +153,64 @@ export function renderSessions(sessions) {
     tbody.appendChild(tr);
   });
 }
+
+function renderBarChart(canvasId, labels, data, seriesLabel) {
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: seriesLabel,
+        data,
+        backgroundColor: 'rgba(0,0,0,0.8)'
+      }]
+    },
+    options: {
+      scales: { y: { beginAtZero: true } },
+      plugins: { legend: { display: false } }
+    }
+  });
+}
+
+function renderLineChart(canvasId, labels, datasets) {
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: datasets.map(ds => ({
+        label: ds.label,
+        data: ds.data,
+        fill: false,
+        tension: 0.2
+      }))
+    },
+    options: {
+      scales: { y: { beginAtZero: true } },
+      plugins: { legend: { position: 'bottom' } }
+    }
+  });
+}
+
 export function renderAnalysis(data) {
-  document.getElementById('busiest-slowest').innerHTML = `
-    <h4>Busiest / Slowest Times</h4>
-    <p>Busiest: ${data.busiest.join(', ')}</p>
-    <p>Slowest: ${data.slowest.join(', ')}</p>
-  `;
-  document.getElementById('mean-duration').innerHTML = `
-    <h4>Parking Duration</h4>
-    <p>Mean: ${data.mean_duration}</p>
-    <p>Median: ${data.median_duration}</p>
-  `;
-  document.getElementById('type-duration').innerHTML = `
-    <h4>By Vehicle Type</h4>
-    <ul>${Object.entries(data.duration_by_type)
-      .map(([t,d]) => `<li>${t}: ${d}</li>`).join('')}</ul>
-  `;
-  document.getElementById('revenue').innerHTML = `
-    <h4>Revenue by Type</h4>
-    <ul>${Object.entries(data.revenue_by_type)
-      .map(([t,r]) => `<li>${t}: ${r}</li>`).join('')}</ul>
-  `;
+  const labels = data.sessions.map(d => d.name);
+  const counts = data.sessions.map(d => d.count);
+  renderBarChart('sessionsChart', labels, counts, 'sessions');
+
+  const revenues = data.revenue.map(d => +(d.revenue / 100).toFixed(2));
+  renderBarChart('revenueChart', labels, revenues, 'revenue');
+
+  const means   = data.durations.map(d => d.mean);
+  const medians = data.durations.map(d => d.median);
+  renderLineChart('durationsChart', labels, [
+    { label: 'mean duration (hrs)',    data: means    },
+    { label: 'median duration (hrs)',  data: medians  }
+  ]);
+
+  const avgRevenue = data.revenue.map((d, i) => {
+    const sessions = data.sessions[i].count || 1;
+    return +((d.revenue / 100) / sessions).toFixed(2);
+  });
+  renderBarChart('avgRevenueChart', labels, avgRevenue, 'average revenue');
 }

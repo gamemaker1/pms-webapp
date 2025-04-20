@@ -1,4 +1,3 @@
-// js/payment.js
 import { fetchSession, deleteSession, fetchRates } from './api.js';
 
 const timeEl   = document.getElementById('time-stayed');
@@ -36,9 +35,18 @@ async function init() {
   }
 }
 
+function generateTransactionId(length = 10) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
 payBtn.addEventListener('click', async () => {
   try {
-    await deleteSession('G23H98ASDKFJ22J2', sessionToken);
+    await deleteSession(generateTransactionId(), sessionToken);
     alert('Payment successful');
     localStorage.removeItem('token');
     location.replace('index.html');

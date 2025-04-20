@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div id="admin-login">
@@ -15,44 +16,83 @@
   </div>
 
   <main id="dashboard">
-    <h2>Smart Parking Dashboard</h2>
+    <section class="snap-section">
+      <h2>Smart Parking Dashboard</h2>
+    </section>
 
-    <div class="header">
-      <h3>Slots</h3>
-      <span class="spinner-wrapper" id="slots-refresh" title="Refresh">
-        <div class="spinner-container">
-          <svg viewBox="0 0 36 36" class="spinner" id="slots-spinner">
-            <path class="track" d="M18 2.0845
-              a 15.9155 15.9155 0 0 1 0 31.831
-              a 15.9155 15.9155 0 0 1 0 -31.831" />
-            <path class="fill" id="slots-fill" stroke-dasharray="0, 100" d="M18 2.0845
-              a 15.9155 15.9155 0 0 1 0 31.831
-              a 15.9155 15.9155 0 0 1 0 -31.831" />
-          </svg>
-          <span class="spinner-count" id="slots-count">30</span>
+    <section class="snap-section">
+      <div class="header">
+        <h3>Analysis</h3>
+      </div>
+      <div id="analysis">
+        <div>
+          <h4>Sessions per Day</h4>
+          <div class="chart-container">
+            <canvas id="sessionsChart"></canvas>
+          </div>
         </div>
-      </span>
-    </div>
-    <div id="slot-filters">
-      <button data-available="" class="active">All</button>
-      <button data-available="true">Available</button>
-      <button data-available="false">Occupied</button>
-    </div>
 
-    <div class="table-wrapper">
-      <table id="slots-table">
-        <thead>
-          <tr>
-            <th>Location</th>
-            <th>Type</th>
-            <th>Occupied</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
+        <div>
+          <h4>Revenue per Day</h4>
+          <div class="chart-container">
+            <canvas id="revenueChart"></canvas>
+          </div>
+        </div>
 
-    <div class="table-wrapper">
+        <div>
+          <h4>Mean & Median Durations</h4>
+          <div class="chart-container">
+            <canvas id="durationsChart"></canvas>
+          </div>
+        </div>
+
+        <div>
+          <h4>Average Revenue per Session</h4>
+          <div class="chart-container">
+            <canvas id="avgRevenueChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="snap-section">
+      <div class="header">
+        <h3>Slots</h3>
+        <span class="spinner-wrapper" id="slots-refresh" title="Refresh">
+          <div class="spinner-container">
+            <svg viewBox="0 0 36 36" class="spinner" id="slots-spinner">
+              <path class="track" d="M18 2.0845
+                a 15.9155 15.9155 0 0 1 0 31.831
+                a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <path class="fill" id="slots-fill" stroke-dasharray="0, 100" d="M18 2.0845
+                a 15.9155 15.9155 0 0 1 0 31.831
+                a 15.9155 15.9155 0 0 1 0 -31.831" />
+            </svg>
+            <span class="spinner-count" id="slots-count">30</span>
+          </div>
+        </span>
+      </div>
+      <div id="slot-filters">
+        <button data-available="" class="active">All</button>
+        <button data-available="true">Available</button>
+        <button data-available="false">Occupied</button>
+      </div>
+
+      <div class="table-wrapper">
+        <table id="slots-table">
+          <thead>
+            <tr>
+              <th>Location</th>
+              <th>Type</th>
+              <th>Occupied</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="snap-section">
       <div class="header">
         <h3>Sessions</h3>
         <span class="spinner-wrapper" id="sessions-refresh" title="Refresh">
@@ -69,29 +109,23 @@
           </div>
         </span>
       </div>
-      <table id="sessions-table">
-        <thead>
-          <tr>
-            <th>Slot</th>
-            <th>Vehicle</th>
-            <th>Status</th>
-            <th>Entry Time</th>
-            <th>Duration</th>
-            <th>Paid Amount</th>
-            <th>Transaction ID</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <div id="analysis">
-      <h3>Analysis</h3>
-      <div id="busiest-slowest"></div>
-      <div id="mean-duration"></div>
-      <div id="type-duration"></div>
-      <div id="revenue"></div>
-    </div>
+      <div class="table-wrapper">
+        <table id="sessions-table">
+          <thead>
+            <tr>
+              <th>Slot</th>
+              <th>Vehicle</th>
+              <th>Status</th>
+              <th>Entry Time</th>
+              <th>Duration</th>
+              <th>Paid Amount</th>
+              <th>Transaction ID</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
   </main>
 
   <script type="module" src="source/admin.js"></script>
