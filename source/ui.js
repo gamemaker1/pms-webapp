@@ -14,9 +14,9 @@ export function displayResult(data) {
     '<h2>Parking Session Details</h2>',
     `<p><strong>Slot:</strong> ${data.slot?.location ?? s.slot ?? '-'}</p>`,
     `<p><strong>Vehicle:</strong> ${s.vehicle}</p>`,
-    `<p><strong>Entry:</strong> ${new Date(s.entry_at).toLocaleString()}</p>`,
-    `<p><strong>Parked:</strong> ${s.parked_at ? new Date(s.parked_at).toLocaleString() : '-'}</p>`,
-    `<p><strong>Left:</strong> ${s.left_at ? new Date(s.left_at).toLocaleString() : '-'}</p>`,
+    `<p><strong>Entry:</strong> ${new Date(s.entry_at).toLocaleString('IN')}</p>`,
+    `<p><strong>Parked:</strong> ${s.parked_at ? new Date(s.parked_at).toLocaleString('IN') : '-'}</p>`,
+    `<p><strong>Left:</strong> ${s.left_at ? new Date(s.left_at).toLocaleString('IN') : '-'}</p>`,
     `<p><strong>Amount:</strong> ${formatAmount(s.amount_paid)}</p>`
   ];
   document.getElementById('result').innerHTML = lines.join('\n');
@@ -83,7 +83,7 @@ export function renderSlots(slots) {
 }
 
 function formatDate(d) {
-  return d ? new Date(d).toLocaleString() : '-';
+  return d ? new Date(d).toLocaleString('IN') : '-';
 }
 
 function getDuration(start, end) {

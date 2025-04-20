@@ -150,7 +150,7 @@ button:hover {
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  height: calc(100vh - 4rem);
+  height: calc(100vh - 2rem);
   overflow-y: auto;
   scroll-snap-type: y mandatory;
   scroll-padding-top: 2rem;
