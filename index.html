@@ -15,6 +15,40 @@
       </form>
     </div>
     <div id="result"></div>
+    <svg id="parking-lot" width="400" height="480" viewBox="0 0 400 480" xmlns="http://www.w3.org/2000/svg">
+      <rect class="road" x="0" y="0" width="40" height="480" />
+      <rect class="road" x="0" y="0" width="400" height="40" />
+
+      <rect id="slot-B1" class="slot" x="60" y="60" width="100" height="140" />
+      <text class="label" x="110" y="135" text-anchor="middle">B1</text>
+      <rect id="slot-B2" class="slot" x="180" y="60" width="100" height="140" />
+      <text class="label" x="230" y="135" text-anchor="middle">B2</text>
+      <rect id="slot-B3" class="slot" x="300" y="60" width="100" height="140" />
+      <text class="label" x="350" y="135" text-anchor="middle">B3</text>
+
+      <rect class="road" x="0" y="220" width="400" height="40" />
+
+      <rect id="slot-A1" class="slot" x="60" y="280" width="100" height="140" />
+      <text class="label" x="110" y="355" text-anchor="middle">A1</text>
+      <rect id="slot-A2" class="slot" x="180" y="280" width="100" height="140" />
+      <text class="label" x="230" y="355" text-anchor="middle">A2</text>
+      <rect id="slot-A3" class="slot" x="300" y="280" width="100" height="140" />
+      <text class="label" x="350" y="355" text-anchor="middle">A3</text>
+
+      <rect class="road" x="0" y="440" width="400" height="40" />
+
+      <line id="gate-exit" class="gate" x1="360" y1="0" x2="360" y2="40" />
+      <text class="gate-label" x="345" y="25" text-anchor="end">Exit</text>
+      <line id="gate-entry" class="gate" x1="360" y1="440" x2="360" y2="480" />
+      <text class="gate-label" x="345" y="465" text-anchor="end">Entry</text>
+
+      <polyline id="route-A1" class="route" points="300,460 20,460 20,240 110,240 110,320" />
+      <polyline id="route-A2" class="route" points="300,460 20,460 20,240 230,240 230,320" />
+      <polyline id="route-A3" class="route" points="300,460 20,460 20,240 350,240 350,320" />
+      <polyline id="route-B1" class="route" points="300,460 20,460 20,240 110,240 110,150" />
+      <polyline id="route-B2" class="route" points="300,460 20,460 20,240 230,240 230,150" />
+      <polyline id="route-B3" class="route" points="300,460 20,460 20,240 350,240 350,150" />
+    </svg>
   </div>
 
   <script type="module" src="source/main.js"></script>

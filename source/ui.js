@@ -1,11 +1,18 @@
 export function showForm() {
   document.getElementById('form').style.display = 'block';
+  document.getElementById('parking-lot').style.display = 'none';
   document.getElementById('result').style.display = 'none';
 }
 
 export function hideForm() {
   document.getElementById('form').style.display = 'none';
+  document.getElementById('parking-lot').style.display = 'block';
   document.getElementById('result').style.display = 'block';
+}
+
+export function hideRoutes() {
+  document.querySelectorAll('.route')
+    .forEach(el => el.style.display = 'none'); 
 }
 
 export function displayResult(data) {
@@ -20,6 +27,9 @@ export function displayResult(data) {
     `<p><strong>Amount:</strong> ${formatAmount(s.amount_paid)}</p>`
   ];
   document.getElementById('result').innerHTML = lines.join('\n');
+
+  const slot =  data.slot?.location ?? s.slot;
+  if (slot) showSlot(slot);
 }
 
 export function bindOtpForm(onSubmit) {
@@ -32,6 +42,18 @@ export function bindOtpForm(onSubmit) {
     onSubmit(otp);
   });
 }
+
+export function showSlot(name) {
+  document.querySelectorAll('.slot').forEach(el => el.classList.remove('highlight-slot'));
+  document.querySelectorAll('.route').forEach(el => el.style.display = 'none');
+
+  const slot = document.getElementById(`slot-${name}`);
+  if (slot) slot.classList.add('highlight-slot');
+
+  const route = document.getElementById(`route-${name}`);
+  if (route) route.style.display = 'inline';
+}
+
 
 export function showLogin() {
   document.getElementById('admin-login').style.display = 'block';

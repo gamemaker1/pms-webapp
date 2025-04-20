@@ -5,6 +5,17 @@
   --shadow: rgba(0, 0, 0, 0.05);
   --radius: 0.5rem;
   --spacing: 1rem;
+
+  --slot-fill: #ffffff;
+  --slot-stroke: #333333;
+  --label-fill: #333333;
+  --road-fill: #e0e0e0;
+  --gate-stroke: #0074D9;
+  --gate-label: #0074D9;
+  --highlight-fill: #fffa8c;
+  --highlight-stroke: #ff851b;
+  --route-stroke: #2ecc40;
+  --svg-bg: #f9f9f9;
 }
 
 * {
@@ -334,5 +345,63 @@ ul li {
     --text: #f0f0f0;
     --border: rgba(255, 255, 255, 0.2);
     --shadow: rgba(0, 0, 0, 0.4);
+
+    --slot-fill: #1e1e1e;
+    --slot-stroke: #cccccc;
+    --label-fill: #e1e1e1;
+    --road-fill: #333333;
+    --gate-stroke: #1E90FF;
+    --gate-label: #1E90FF;
+    --highlight-fill: #7aa2f7;
+    --highlight-stroke: #2ecc40;
+    --route-stroke: #ff9e64;;
+    --svg-bg: #1a1a1a;
   }
+}
+
+#parking-lot {
+  display: block;
+  margin: 0 auto;
+  background: var(--svg-bg);
+}
+
+.slot {
+  fill: var(--slot-fill);
+  stroke: var(--slot-stroke);
+  stroke-width: 2;
+}
+
+.label {
+  font-family: sans-serif;
+  font-size: 14px;
+  fill: var(--label-fill);
+  pointer-events: none;
+}
+
+.road {
+  fill: var(--road-fill);
+}
+
+.gate {
+  stroke: var(--gate-stroke);
+  stroke-width: 4;
+}
+
+.gate-label {
+  font-family: sans-serif;
+  font-size: 12px;
+  fill: var(--gate-label);
+}
+
+.highlight-slot {
+  fill: var(--highlight-fill);
+  stroke: var(--highlight-stroke);
+  stroke-width: 3;
+}
+
+.route {
+  fill: none;
+  stroke: var(--route-stroke);
+  stroke-width: 4;
+  stroke-dasharray: 8,4;
 }

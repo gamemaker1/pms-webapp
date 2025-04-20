@@ -1,7 +1,9 @@
 import { fetchSession } from './api.js';
-import { showForm, hideForm, displayResult, bindOtpForm } from './ui.js';
+import { showForm, hideForm, hideRoutes, displayResult, bindOtpForm } from './ui.js';
 
 async function init() {
+  hideRoutes();
+  
   bindOtpForm(async otp => {
     try {
       const data = await fetchSession(otp, null);
