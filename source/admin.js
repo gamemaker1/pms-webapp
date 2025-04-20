@@ -41,6 +41,7 @@ async function init() {
 
     refreshData('sessions', loadSessions);
     refreshData('slots', loadSlots);
+    refreshData('analysis', loadAnalysis);
   });
 
   bindSlotFilters(loadSlots);
@@ -53,6 +54,7 @@ async function init() {
 
     refreshData('sessions', loadSessions);
     refreshData('slots', loadSlots);
+    refreshData('analysis', loadAnalysis);
   } else showLogin();
 }
 

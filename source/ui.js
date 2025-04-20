@@ -154,43 +154,65 @@ export function renderSessions(sessions) {
   });
 }
 
+let charts = {}
+
 function renderBarChart(canvasId, labels, data, seriesLabel) {
   const ctx = document.getElementById(canvasId).getContext('2d');
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [{
-        label: seriesLabel,
-        data,
-        backgroundColor: 'rgba(0,0,0,0.8)'
-      }]
-    },
-    options: {
-      scales: { y: { beginAtZero: true } },
-      plugins: { legend: { display: false } }
-    }
-  });
+
+  if (charts[canvasId]) {
+    charts[canvasId].data.labels = labels;
+    charts[canvasId].data.datasets[0].label = seriesLabel;
+    charts[canvasId].data.datasets[0].data = data;
+    charts[canvasId].update('active');
+  } else {
+    charts[canvasId] = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: seriesLabel,
+          data,
+          backgroundColor: 'rgba(0,0,0,0.8)'
+        }]
+      },
+      options: {
+        scales: { y: { beginAtZero: true } },
+        plugins: { legend: { display: false } }
+      }
+    });
+  }
 }
 
 function renderLineChart(canvasId, labels, datasets) {
   const ctx = document.getElementById(canvasId).getContext('2d');
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: datasets.map(ds => ({
-        label: ds.label,
-        data: ds.data,
-        fill: false,
-        tension: 0.2
-      }))
-    },
-    options: {
-      scales: { y: { beginAtZero: true } },
-      plugins: { legend: { position: 'bottom' } }
-    }
-  });
+
+  if (charts[canvasId]) {
+    charts[canvasId].data.labels = labels;
+    charts[canvasId].data.datasets = datasets.map(ds => ({
+      label: ds.label,
+      data: ds.data,
+      fill: false,
+      tension: 0.2
+    }));
+    charts[canvasId].update('active');
+  } else {
+    charts[canvasId] = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: datasets.map(ds => ({
+          label: ds.label,
+          data: ds.data,
+          fill: false,
+          tension: 0.2
+        }))
+      },
+      options: {
+        scales: { y: { beginAtZero: true } },
+        plugins: { legend: { position: 'bottom' } }
+      }
+    });
+  }
 }
 
 export function renderAnalysis(data) {
